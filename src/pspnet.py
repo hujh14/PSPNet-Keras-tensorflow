@@ -208,6 +208,7 @@ if __name__ == "__main__":
 
             cm = np.argmax(probs, axis=2)
             pm = np.max(probs, axis=2)
+            pm = np.array(pm*255, dtype='uint8')
 
             # color cm is [0.0-1.0] img is [0-255]
             color_cm = utils.add_color(cm)
