@@ -15,7 +15,6 @@ from keras.utils.generic_utils import CustomObjectScope
 
 import layers_builder as layers
 from python_utils import utils
-from python_utils.preprocessing import preprocess_img
 
 # These are the means for the ImageNet pretrained ResNet
 DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])  # RGB order
@@ -55,12 +54,10 @@ class PSPNet(object):
 
         # Preprocess
         img = cv2.resize(img, self.input_shape)
-
         img = img - DATA_MEAN[:,:,::-1]
-        # img = img[:, :, ::-1]  # RGB => BGR
         img = img.astype('float32')
-        # print("Predicting...")
 
+        # print("Predicting...")
         probs = self.feed_forward(img, flip_evaluation)
 
         if img.shape[0:1] != self.input_shape:  # upscale prediction if necessary
@@ -69,7 +66,6 @@ class PSPNet(object):
                                  order=1, prefilter=False)
 
         # print("Finished prediction...")
-
         return probs
 
     def feed_forward(self, data, flip_evaluation=False):
