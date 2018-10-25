@@ -217,8 +217,8 @@ if __name__ == "__main__":
             fn = img_path.replace(im_dir, '')
             if fn[0] == '/':
                 fn = fn[1:]
-            cm_fn = join(cm_dir, fn)
-            pm_fn = join(pm_dir, fn)
+            cm_fn = join(cm_dir, fn.replace('.jpg', '.png'))
+            pm_fn = join(pm_dir, fn.replace('.jpg', '.png'))
             vis_fn = join(vis_dir, fn)
 
             if not exists(dirname(cm_fn)):
