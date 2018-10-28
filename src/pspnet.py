@@ -176,16 +176,19 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--flip', type=bool, default=True,
                         help="Whether the network should predict on both image and flipped image.")
 
+    parser.add_argument('-l', '--im_list', type=str, default=None)
+    parser.add_argument('-d', '--im_dir', type=str, default=None)
     args = parser.parse_args()
 
     # Handle input and output args
-    images = glob(args.glob_path) if args.glob_path else [args.input_path,]
-    images.sort()
+    # images = glob(args.glob_path) if args.glob_path else [args.input_path,]
+    # images.sort()
+
+    im_list = []
+    with open(args.im_list) as f:
+        im_list = f.read().splitlines()
 
     # Directories
-    im_dir = os.path.dirname(args.input_path)
-    if args.glob_path:
-        im_dir = args.glob_path.split('*')[0]
     cm_dir = join(args.output_dir, "cm/")
     pm_dir = join(args.output_dir, "pm/")
     vis_dir = join(args.output_dir, "vis/")
@@ -200,8 +203,9 @@ if __name__ == "__main__":
     with sess.as_default():
         print(args)
         pspnet = get_pspnet(args.model, args.weights)
-        for i, img_path in enumerate(images):
-            print("Processing image {} / {} : {}".format(i+1,len(images), img_path))
+        for i, im_name in enumerate(im_list):
+            print("Processing image {} / {} : {}".format(i+1,len(im_list), im_name))
+            img_path = os.path.join(args.im_dir, im_name)
             img = cv2.imread(img_path)
 
             probs = pspnet.predict(img, args.flip)
@@ -214,12 +218,9 @@ if __name__ == "__main__":
             color_cm = utils.add_color(cm)
             alpha_blended = 0.5 * color_cm * 255 + 0.5 * img
 
-            fn = img_path.replace(im_dir, '')
-            if fn[0] == '/':
-                fn = fn[1:]
-            cm_fn = join(cm_dir, fn.replace('.jpg', '.png'))
-            pm_fn = join(pm_dir, fn.replace('.jpg', '.png'))
-            vis_fn = join(vis_dir, fn)
+            cm_fn = join(cm_dir, im_name.replace('.jpg', '.png'))
+            pm_fn = join(pm_dir, im_name.replace('.jpg', '.png'))
+            vis_fn = join(vis_dir, im_name)
 
             if not exists(dirname(cm_fn)):
                 os.makedirs(dirname(cm_fn))
