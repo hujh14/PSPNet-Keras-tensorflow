@@ -205,9 +205,14 @@ if __name__ == "__main__":
         pspnet = get_pspnet(args.model, args.weights)
         for i, im_name in enumerate(im_list):
             print("Processing image {} / {} : {}".format(i+1,len(im_list), im_name))
-            img_path = os.path.join(args.im_dir, im_name)
-            img = cv2.imread(img_path)
+            img_path = os.path.join(args.im_dir, im_name)5 * img
+            cm_fn = join(cm_dir, im_name.replace('.jpg', '.png'))
+            pm_fn = join(pm_dir, im_name.replace('.jpg', '.png'))
+            vis_fn = join(vis_dir, im_name)
+            if os.path.exists(vis_fn):
+                continue
 
+            img = cv2.imread(img_path)
             probs = pspnet.predict(img, args.flip)
 
             cm = np.argmax(probs, axis=2)
@@ -216,11 +221,7 @@ if __name__ == "__main__":
 
             # color cm is [0.0-1.0] img is [0-255]
             color_cm = utils.add_color(cm)
-            alpha_blended = 0.5 * color_cm * 255 + 0.5 * img
-
-            cm_fn = join(cm_dir, im_name.replace('.jpg', '.png'))
-            pm_fn = join(pm_dir, im_name.replace('.jpg', '.png'))
-            vis_fn = join(vis_dir, im_name)
+            alpha_blended = 0.5 * color_cm * 255 + 0.
 
             if not exists(dirname(cm_fn)):
                 os.makedirs(dirname(cm_fn))
