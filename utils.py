@@ -2,9 +2,9 @@ from __future__ import print_function
 import colorsys
 import numpy as np
 from keras.models import Model
-from cityscapes_labels import trainId2label
-from ade20k_labels import ade20k_id2label
-from pascal_voc_labels import voc_id2label
+from labels.cityscapes_labels import trainId2label
+from labels.ade20k_labels import ade20k_id2label
+from labels.pascal_voc_labels import voc_id2label
 
 
 def class_image_to_image(class_id_image, class_id_to_rgb_map):
