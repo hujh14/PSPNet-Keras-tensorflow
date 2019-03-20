@@ -15,7 +15,7 @@ from . import layers_builder as layers
 
 # These are the means for the ImageNet pretrained ResNet
 DATA_MEAN = np.array([[[123.68, 116.779, 103.939]]])  # RGB order
-
+DIR_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 class PSPNet(object):
     """Pyramid Scene Parsing Network by Hengshuang Zhao et al 2017"""
@@ -24,8 +24,8 @@ class PSPNet(object):
         self.input_shape = input_shape
         if 'pspnet' in weights:
             # Import using model_name
-            h5_path = os.path.join("weights", "keras", weights + ".h5")
-            json_path = os.path.join("weights", "keras", weights + ".json")
+            h5_path = os.path.join(DIR_PATH, "weights", "keras", weights + ".h5")
+            json_path = os.path.join(DIR_PATH, "weights", "keras", weights + ".json")
             self.model = layers.build_pspnet(nb_classes=nb_classes,
                                              resnet_layers=resnet_layers,
                                              input_shape=self.input_shape)
@@ -77,9 +77,9 @@ class PSPNet(object):
         return prediction
 
     def set_npy_weights(self, model_name):
-        npy_weights_path = os.path.join("weights", "npy", model_name + ".npy")
-        json_path = os.path.join("weights", "keras", model_name + ".json")
-        h5_path = os.path.join("weights", "keras", model_name + ".h5")
+        npy_weights_path = os.path.join(DIR_PATH, "weights", "npy", model_name + ".npy")
+        json_path = os.path.join(DIR_PATH, "weights", "keras", model_name + ".json")
+        h5_path = os.path.join(DIR_PATH, "weights", "keras", model_name + ".h5")
 
         print("Importing weights from %s" % npy_weights_path)
         weights = np.load(npy_weights_path, encoding='bytes').item()
